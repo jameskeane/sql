@@ -36,16 +36,9 @@ func (self *ResultSet) Scan(refs ...interface{}) sql.Error {
 	}
 	
 	for i, val := range refs {
-		switch v := val.(type) {
-			case nil:
-				// Do nothing
-				continue
-			case *int:
-				*v = self.statement.handle.sqlColumnInt(i)
-			case *string:
-				*v = self.statement.handle.sqlColumnText(i)
-			default:
-				return sql.NewError("Attempting to scan an unrecognized type")				
+		err := self.getColumn(i, val)
+		if err != nil {
+			return err
 		}
 	}
 	return nil

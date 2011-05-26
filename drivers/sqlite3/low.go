@@ -333,6 +333,18 @@ func (self *sqlStatement) sqlColumnInt(col int) int {
 	return int(C.sqlite3_column_int(self.handle, C.int(col)))
 }
 
+func (self *sqlStatement) sqlColumnInt64(col int) int64 {
+	return int64(C.sqlite3_column_int64(self.handle, C.int(col)))
+}
+
+func (self *sqlStatement) sqlColumnFloat32(col int) float32 {
+	return float32(C.sqlite3_column_double(self.handle, C.int(col)))
+}
+
+func (self *sqlStatement) sqlColumnFloat64(col int) float64 {
+	return float64(C.sqlite3_column_double(self.handle, C.int(col)))
+}
+
 func (self *sqlStatement) sqlColumnDeclaredType(col int) string {
 	cp := C.sqlite3_column_decltype(self.handle, C.int(col));
 	// This can return nil, for example if the column is an
