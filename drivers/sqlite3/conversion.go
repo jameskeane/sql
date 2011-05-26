@@ -6,6 +6,8 @@ import (
 	"sql"
 )
 
+// TODO: don't use int!!it can change on each machine.. must convert to int32 or int64 first
+
 // Wrap this on the sqlStatement type to avoid exporting it
 func (self *sqlStatement) BindParams(params ...interface{}) sql.Error {
 	var rc int
@@ -27,6 +29,8 @@ func (self *sqlStatement) BindParams(params ...interface{}) sql.Error {
 				rc = self.sqlBindNull(pos)
 			case int:
 				rc = self.sqlBindInt(pos, param.(int))
+			case int64:
+				rc = self.sqlBindInt64(pos, param.(int64))
 			case string:
 				rc = self.sqlBindText(pos, param.(string))
 			case float32:

@@ -262,6 +262,10 @@ func (self *sqlStatement) sqlBindInt(slot int, value int) int {
 	return int(C.sqlite3_bind_int(self.handle, C.int(slot+1), C.int(value)))
 }
 
+func (self *sqlStatement) sqlBindInt64(slot int, value int64) int {
+	return int(C.sqlite3_bind_int64(self.handle, C.int(slot+1), C.sqlite3_int64(value)))
+}
+
 func (self *sqlStatement) sqlBindNull(slot int) int {
 	return int(C.sqlite3_bind_null(self.handle, C.int(slot+1)))
 }
