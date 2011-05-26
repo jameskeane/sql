@@ -5,6 +5,7 @@ import (
 	"sql"
 	"os"
 	_ "sql/sqlite3"
+	_ "sql/postgresql"
 )
 
 func fib(i int) int {
@@ -49,4 +50,8 @@ func main() {
 	// test the sqlite3 driver
 	fmt.Print("Test sql/sqlite3: \n")
 	_ = test_sql("sqlite3://test.db")
+	
+	// test the postgresql driver
+	fmt.Print("Test sql/postgresql: \n")
+	_ = test_sql("postgresql://root:hello@db.freedb.com/test?sslmode=require")
 }
