@@ -14,6 +14,7 @@ func (self *Connection) Query(sql string, params ...interface{}) (sql.ResultSet,
 		return nil, err	
 	}
 
+	// TODO: need a way to finalize this statement ? but allow the result set to stay open
 	//defer stmt.Close()
 	return stmt.Query(params...)
 }

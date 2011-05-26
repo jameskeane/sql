@@ -5,7 +5,7 @@ include $(GOROOT)/src/Make.inc
 
 TARG=sql/sqlite3
 CGOFILES=low.go
-GOFILES=driver.go error.go connection.go statement.go
+GOFILES=driver.go error.go connection.go statement.go result_set.go
 CGO_LDFLAGS=-lsqlite3
 #CLEANFILES+=example test.db
 

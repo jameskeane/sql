@@ -266,6 +266,14 @@ func (self *sqlStatement) sqlBindNull(slot int) int {
 	return int(C.sqlite3_bind_null(self.handle, C.int(slot+1)))
 }
 
+func (self *sqlStatement) sqlBindFloat64(slot int, value float64) int {
+	return int(C.sqlite3_bind_double(self.handle, C.int(slot+1), C.double(value)))
+}
+
+func (self *sqlStatement) sqlBindFloat32(slot int, value float32) int {
+	return int(C.sqlite3_bind_double(self.handle, C.int(slot+1), C.double(value)))
+}
+
 func (self *sqlStatement) sqlClearBindings() int {
 	return int(C.sqlite3_clear_bindings(self.handle));
 }
@@ -319,6 +327,10 @@ func (self *sqlStatement) sqlColumnText(col int) string {
 //		sqlPanic("can't get column text");
 //	}
 	return C.GoString(cp);
+}
+
+func (self *sqlStatement) sqlColumnInt(col int) int {
+	return int(C.sqlite3_column_int(self.handle, C.int(col)))
 }
 
 func (self *sqlStatement) sqlColumnDeclaredType(col int) string {

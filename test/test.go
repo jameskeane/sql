@@ -29,12 +29,17 @@ func test_sql(dsn string) os.Error{
 	}
 	
 	stmt, _ := conn.Prepare("INSERT INTO fib VALUES(?, ?);")
-	
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 10; i++ {
 		stmt.Execute(i, fib(i))
 	}
 	stmt.Close()
 	
+	rs, _ := conn.Query("SELECT * FROM fib;")
+	var pos, val int
+	for rs.Next() {
+		rs.Scan(&pos, &val)
+		fmt.Println(pos, val)
+	}	
 
 	conn.Close()
 	return nil

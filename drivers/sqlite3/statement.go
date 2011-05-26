@@ -32,14 +32,26 @@ func (self *sqlStatement) BindParams(params ...interface{}) sql.Error {
 				rc = self.sqlBindInt(pos, param.(int))
 			case string:
 				rc = self.sqlBindText(pos, param.(string))
+			case float32:
+				rc = self.sqlBindFloat32(pos, param.(float32))
+			case float64:
+				rc = self.sqlBindFloat64(pos, param.(float64))
+			case bool:
+				// http://www.sqlite.org/datatype3.html
+				// SQLite does not have a separate Boolean storage class. Instead, Boolean values are stored as integers 0 (false) and 1 (true).
+				var b int
+				if param.(bool) {
+					b = 1
+				} else {
+					b = 0
+				}
+				rc = self.sqlBindInt(pos, b)
 			default:
-				// TODO: Error checking
-				return sql.InvalidBindType
+				return sql.NewError("Parameter " + string(pos+1) + "is an unrecognized type")
 		}
 		
 		if rc != StatusOk {
-			// TODO: Error checking
-			return sql.InvalidBindType
+			return sql.NewError("Could not bind parameter " + string(pos+1))
 		}	
 	}
 	return nil
@@ -48,16 +60,27 @@ func (self *sqlStatement) BindParams(params ...interface{}) sql.Error {
 
 
 func (self *Statement) Query(params ...interface{}) (sql.ResultSet, sql.Error)  {
+
+	rc := self.handle.sqlReset()
+	if rc != StatusOk {
+		// Then there is some error
+		return nil, sql.NewError(self.connection.handle.sqlErrorMessage())	
+	}
+	
+	// TODO: Error Checking
+	self.handle.sqlClearBindings()
+
+
 	err := self.handle.BindParams(params...)
 	if err != nil {
-		return err
+		return nil, err
 	}
-
-	// TODO: Implement this
-	self.handle.sqlReset()
-	self.handle.sqlClearBindings()
-		
-	return nil, nil
+	
+	rs := new(ResultSet)
+	rs.statement = self
+	rs.connection = self.connection
+	
+	return rs, nil
 }
 
 

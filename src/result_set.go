@@ -2,9 +2,6 @@ package sql
 
 // API to be implemented for query resultsets.
 type ResultSet interface {
-    // The number of rows returned by the query.
-    RowCount() (uint64, Error)
-
     // Get the next row of results.
     Next() bool
 
