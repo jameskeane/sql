@@ -3,6 +3,7 @@ package sqlite3
 import (
 	"http"
 	"sql"
+	"fmt"
 )
 
 type Driver struct {
@@ -31,7 +32,7 @@ func (self *Driver) Connect(dsn *http.URL) (sql.Connection, sql.Error) {
     if err != nil {
         return nil, err
     }    
-
+	
     sqlConn, rc := sqlOpen(ds.file, ds.flags, ds.vfs)
     if rc != StatusOk {
     	//TODO: error checking

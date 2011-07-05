@@ -30,13 +30,11 @@ func (self *Connection) Execute(sql string, params ...interface{}) sql.Error {
 }
 
 func (self *Connection) Prepare(query string) (sql.Statement, sql.Error) {
-	sqlStmt := self.handle.pqPrepare(query)
+	//sqlStmt := self.handle.pqPrepare(query)
 	// TODO: Error checking
 	
 
 	stmt := new(Statement)
-	stmt.handle = sqlStmt
-	stmt.connection = self
 	return stmt, nil
 }
 
