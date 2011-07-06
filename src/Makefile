@@ -1,7 +1,7 @@
 include $(GOROOT)/src/Make.inc
 
 TARG=sql
-GOFILES=connection.go driver.go error.go manager.go result_set.go statement.go
+GOFILES=connection.go driver.go error.go manager.go result_set.go statement.go dsn.go
 
 # gb: this is the local install
 PKGROOT=..

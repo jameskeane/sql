@@ -1,48 +1,29 @@
 package sqlite3
 
 import (
-	"http"
 	"sql"
-	"fmt"
 )
 
 type Driver struct {
 }
 
-type DataSource struct {
-	file string
-	flags int
-	vfs string
+
+func parseDataSource(dsn *sql.DSN) (file string, flags int, vfs string) {
+    // TODO: figure out a good way to pass the flags, probably in the query
+    //			sqlite3 supports uri filenames <http://www.sqlite.org/uri.html>
+    return dsn.Host+"/"+dsn.Database, OpenReadWrite | OpenCreate, dsn.Parameters["vfs"]
 }
 
-func parseDataSource(dsn *http.URL) (res *DataSource, err sql.Error) {
-    res = new(DataSource)
-    res.file = dsn.Host
-    
-    // TODO: figure out a good way to pass these options, probably in the query
-    res.flags = OpenReadWrite | OpenCreate
-    res.vfs = ""
-    
-    //res.options, err = http.ParseQuery(dsn.RawQuery)
-    return
-}
-
-func (self *Driver) Connect(dsn *http.URL) (sql.Connection, sql.Error) {
-    ds, err := parseDataSource(dsn)
-    if err != nil {
-        return nil, err
-    }    
+func (self *Driver) Connect(dsn *sql.DSN) (sql.Connection, sql.Error) {
+    file, flags, vfs := parseDataSource(dsn)
 	
-    sqlConn, rc := sqlOpen(ds.file, ds.flags, ds.vfs)
+    sqlConn, rc := sqlOpen(file, flags, vfs)
     if rc != StatusOk {
     	//TODO: error checking
 		return nil, sql.Busy
     }
     
-    conn := new(Connection)
-    conn.handle = sqlConn
-    
-    return conn, nil
+    return &Connection{handle:sqlConn}, nil
 }
 
 

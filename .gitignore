@@ -4,3 +4,4 @@ _cgo_*
 _obj
 6.out
 *.db
+_test*

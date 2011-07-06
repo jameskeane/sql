@@ -1,8 +1,5 @@
 package sql
 
-import "http"
-
-
 var drivers map[string]Driver
 
 
@@ -21,19 +18,18 @@ func UnregisterDriver(name string) {
 	drivers[name] = nil, false
 }
 
-
-func Connect(dsn string) (Connection, Error) {
-	url, err := http.ParseURLReference(dsn)
+func Connect(dsn_string string) (Connection, Error) {
+	dsn, err := parseDSN(dsn_string)
 	if err != nil {
-		return nil, NewError("Invalid DSN URL: " + dsn)	
+		return nil, err
 	}
 
-	driver, found := drivers[url.Scheme]
+	driver, found := drivers[dsn.Driver]
 	if !found {
-		return nil, NewError("No driver found: " + url.Scheme)	
+		return nil, NewError("sql: No driver found: " + dsn.Driver)	
 	}
 
-	return driver.Connect(url)
+	return driver.Connect(dsn)
 }
 
 func initDriversMap() {

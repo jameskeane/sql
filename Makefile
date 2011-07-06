@@ -13,6 +13,7 @@ install: all
 	gomake -C drivers/postgresql install
 
 test:
+	gomake -C src test
 	gomake -C src
 	gomake -C drivers/sqlite3 test
 	gomake -C drivers/postgresql test
